@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- DataSource -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- pool sizing -->
+		<property name="initialPoolSize" value="${jdbc.pool.initial}" />
+		<property name="minPoolSize" value="${jdbc.pool.min}" />
+		<property name="maxPoolSize" value="${jdbc.pool.max}" />
+		<property name="maxIdleTime" value="${jdbc.pool.idle}" />
+	</bean>
+
+	<!-- Transaction Support -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- JdbcTemplate -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="pebbleEngine" class="com.mitchellbosecke.pebble.PebbleEngine">
+		<property name="loader">
+			<bean class="com.mitchellbosecke.pebble.spring.PebbleTemplateLoader" />
+		</property>
+		<property name="templateCache">
+			<null />
+		</property>
+	</bean>
+
+	<bean id="viewResolver" class="com.mitchellbosecke.pebble.spring.PebbleViewResolver">
+		<property name="prefix" value="/templates/" />
+		<property name="suffix" value="" />
+		<property name="pebbleEngine" ref="pebbleEngine" />
+	</bean>
+
+	<context:property-placeholder location="classpath*:default.properties" />
+
+	<context:component-scan base-package="com.itranswarp.recurring" />
+
+	<tx:annotation-driven transaction-manager="txManager" />
+
+	<mvc:annotation-driven />
+
+	<mvc:resources mapping="/static/**" location="/static/" />
+
+	<mvc:resources mapping="/templates/**" location="/templates/" />
+
+</beans>
