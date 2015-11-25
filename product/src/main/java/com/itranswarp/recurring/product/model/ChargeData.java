@@ -3,6 +3,10 @@ package com.itranswarp.recurring.product.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.itranswarp.recurring.common.util.CustomRawStringDeserialize;
+import com.itranswarp.recurring.common.util.CustomRawStringSerialize;
 import com.itranswarp.recurring.db.model.BaseEntity;
 
 /**
@@ -29,12 +33,16 @@ public class ChargeData extends BaseEntity {
     String priceType;
 
     @Column(columnDefinition = COL_TEXT, nullable = false, updatable = false)
+    @JsonDeserialize(using = CustomRawStringDeserialize.class)
+    @JsonSerialize(using = CustomRawStringSerialize.class)
     String priceData;
 
     @Column(length = VARCHAR_100, nullable = false, updatable = false)
     String billingType;
 
     @Column(columnDefinition = COL_TEXT, nullable = false, updatable = false)
+    @JsonDeserialize(using = CustomRawStringDeserialize.class)
+    @JsonSerialize(using = CustomRawStringSerialize.class)
     String billingData;
 
     @Column(length = VARCHAR_100,nullable = false,updatable = true)
