@@ -40,3 +40,6 @@ $ mvn package
 $ cd api/target
 $ java -jar jetty-runner.jar api-0.1-SNAPSHOT-jar-with-dependencies.war
 ```
+
+### Postman Collection
+https://www.getpostman.com/collections/cc0acc91ee3b63826eb4
